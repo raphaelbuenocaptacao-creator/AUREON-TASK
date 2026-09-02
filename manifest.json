@@ -1,0 +1,18 @@
+{
+  "name": "AUREON TASK",
+  "short_name": "AUREON TASK",
+  "description": "Agenda, tarefas, anotações, relatórios e foco diário.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#090B14",
+  "theme_color": "#7C3AED",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
