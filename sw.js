@@ -1,6 +1,6 @@
 const CACHE_PREFIX='aureon-task-shell-';
-const CACHE=CACHE_PREFIX+'v3-safe';
-const ASSETS=['./','./index.html','./manifest.json','./icon.svg','./icon-192.png','./icon-512.png','./icon-maskable-512.png'];
+const CACHE=CACHE_PREFIX+'v4-webmanifest-safe';
+const ASSETS=['./','./index.html','./manifest.json','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./icon-maskable-512.png'];
 const SENSITIVE=/\b(api|auth|login|logout|session|token|password|senha|secret|private|account|conta)\b/i;
 const SHELL_PATHS=new Set(ASSETS.map(asset=>new URL(asset,self.location.href).pathname));
 
