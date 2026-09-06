@@ -1,6 +1,6 @@
 const CACHE_PREFIX='aureon-task-shell-';
-const CACHE=CACHE_PREFIX+'v4-webmanifest-safe';
-const ASSETS=['./','./index.html','./manifest.json','./manifest.webmanifest','./icon.svg','./icon-192.png','./icon-512.png','./icon-maskable-512.png'];
+const CACHE=CACHE_PREFIX+'v5-raster-safe';
+const ASSETS=['./','./index.html','./manifest.json','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png'];
 const SENSITIVE=/\b(api|auth|login|logout|session|token|password|senha|secret|private|account|conta)\b/i;
 const SHELL_PATHS=new Set(ASSETS.map(asset=>new URL(asset,self.location.href).pathname));
 
@@ -12,7 +12,7 @@ self.addEventListener('install',event=>{
         const response=await fetch(asset,{cache:'no-cache',credentials:'same-origin',redirect:'error'});
         if(cacheableResponse(response)) await cache.put(asset,response.clone());
       }catch(error){
-        // A single optional shell asset must not make installation unsafe or cache a redirect.
+        // Optional shell failures must not poison installation or cache redirects.
       }
     }));
   })());
@@ -36,6 +36,8 @@ function cacheableRequest(request){
 function cacheableResponse(response){
   if(!response||!response.ok||response.redirected||response.type==='opaque'||response.status===206) return false;
   if(response.headers.has('content-range')||response.headers.has('set-cookie')) return false;
+  const vary=(response.headers.get('vary')||'').toLowerCase();
+  if(vary.includes('cookie')||vary.includes('authorization')) return false;
   const cc=(response.headers.get('cache-control')||'').toLowerCase();
   if(cc.includes('no-store')||cc.includes('private')) return false;
   return true;
