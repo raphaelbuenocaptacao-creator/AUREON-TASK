@@ -1,6 +1,6 @@
 const CACHE_PREFIX='aureon-task-shell-';
-const CACHE=CACHE_PREFIX+'v5-raster-safe';
-const ASSETS=['./','./index.html','./manifest.json','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png'];
+const CACHE=CACHE_PREFIX+'v6-private-precache-safe';
+const ASSETS=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png'];
 const SENSITIVE=/\b(api|auth|login|logout|session|token|password|senha|secret|private|account|conta)\b/i;
 const SHELL_PATHS=new Set(ASSETS.map(asset=>new URL(asset,self.location.href).pathname));
 
@@ -9,7 +9,7 @@ self.addEventListener('install',event=>{
     const cache=await caches.open(CACHE);
     await Promise.all(ASSETS.map(async asset=>{
       try{
-        const response=await fetch(asset,{cache:'no-cache',credentials:'same-origin',redirect:'error'});
+        const response=await fetch(asset,{cache:'reload',credentials:'omit',redirect:'error'});
         if(cacheableResponse(response)) await cache.put(asset,response.clone());
       }catch(error){
         // Optional shell failures must not poison installation or cache redirects.
