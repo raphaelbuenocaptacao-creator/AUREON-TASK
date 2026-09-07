@@ -1,16 +1,16 @@
 const CACHE_PREFIX='aureon-task-shell-';
-const CACHE=CACHE_PREFIX+'v6-private-precache-safe';
+const CACHE=CACHE_PREFIX+'v7-private-vary-safe';
 const ASSETS=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png'];
 const SENSITIVE=/\b(api|auth|login|logout|session|token|password|senha|secret|private|account|conta)\b/i;
-const SHELL_PATHS=new Set(ASSETS.map(asset=>new URL(asset,self.location.href).pathname));
+const SHELL_PATHS=new Set(ASSETS.map(asset=>new URL(asset,self.registration.scope).pathname));
 
 self.addEventListener('install',event=>{
   event.waitUntil((async()=>{
     const cache=await caches.open(CACHE);
     await Promise.all(ASSETS.map(async asset=>{
       try{
-        const response=await fetch(asset,{cache:'reload',credentials:'omit',redirect:'error'});
-        if(cacheableResponse(response)) await cache.put(asset,response.clone());
+        const response=await fetch(new URL(asset,self.registration.scope),{cache:'reload',credentials:'omit',redirect:'error'});
+        if(cacheableResponse(response)) await cache.put(new URL(asset,self.registration.scope),response.clone());
       }catch(error){
         // Optional shell failures must not poison installation or cache redirects.
       }
@@ -20,8 +20,11 @@ self.addEventListener('install',event=>{
 });
 
 self.addEventListener('activate',event=>{
-  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith(CACHE_PREFIX)&&key!==CACHE).map(key=>caches.delete(key)))));
-  self.clients.claim();
+  event.waitUntil((async()=>{
+    const keys=await caches.keys();
+    await Promise.all(keys.filter(key=>key.startsWith(CACHE_PREFIX)&&key!==CACHE).map(key=>caches.delete(key)));
+    await self.clients.claim();
+  })());
 });
 
 function cacheableRequest(request){
@@ -37,7 +40,7 @@ function cacheableResponse(response){
   if(!response||!response.ok||response.redirected||response.type==='opaque'||response.status===206) return false;
   if(response.headers.has('content-range')||response.headers.has('set-cookie')) return false;
   const vary=(response.headers.get('vary')||'').toLowerCase();
-  if(vary.includes('cookie')||vary.includes('authorization')) return false;
+  if(vary.includes('*')||vary.includes('cookie')||vary.includes('authorization')) return false;
   const cc=(response.headers.get('cache-control')||'').toLowerCase();
   if(cc.includes('no-store')||cc.includes('private')) return false;
   return true;
@@ -61,11 +64,13 @@ self.addEventListener('fetch',event=>{
       return response;
     }catch(error){
       if(isShellAsset){
-        const cached=await caches.match(request);
+        const cache=await caches.open(CACHE);
+        const cached=await cache.match(request,{ignoreSearch:true});
         if(cached) return cached;
       }
       if(isNavigation){
-        const fallback=await caches.match('./index.html');
+        const cache=await caches.open(CACHE);
+        const fallback=await cache.match(new URL('./index.html',self.registration.scope),{ignoreSearch:true});
         if(fallback) return fallback;
       }
       throw error;
