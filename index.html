@@ -4,9 +4,13 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <meta name="theme-color" content="#090B14" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="description" content="AUREON TASK — tarefas, agenda, anotações, relatórios e foco diário." />
-<link rel="manifest" href="manifest.json" />
+<link rel="manifest" href="manifest.webmanifest" />
 <link rel="icon" href="icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="icon-192.png" />
 <title>AUREON TASK</title>
 <style>
 :root{--bg:#090B14;--panel:#101425;--panel2:#151A31;--text:#F8FAFC;--muted:#94A3B8;--violet:#7C3AED;--violet2:#A78BFA;--cyan:#38BDF8;--green:#34D399;--amber:#FBBF24;--red:#FB7185;--line:rgba(255,255,255,.08);--shadow:0 22px 70px rgba(0,0,0,.34)}
@@ -19,7 +23,7 @@
 <div class="app">
   <header class="topbar">
     <div class="brand"><div class="logo" aria-label="Aureon Task"></div><div><h1>AUREON TASK</h1><small>AGENDA • FOCO • INTELIGÊNCIA</small></div></div>
-    <button class="btn" id="notifyBtn">🔔 <span class="btnText">Ativar notificações</span></button>
+    <div style="display:flex;gap:8px;align-items:center"><button class="btn" id="installBtn" hidden>⬇️ <span class="btnText">Instalar app</span></button><button class="btn" id="notifyBtn">🔔 <span class="btnText">Ativar notificações</span></button></div>
   </header>
 
   <main>
@@ -124,9 +128,13 @@ function changeMonth(n){calDate=new Date(calDate.getFullYear(),calDate.getMonth(
 function renderAll(){renderToday();renderTasks();renderEvents();renderNotes();renderReports();renderCalendar()}
 async function enableNotifications(){if(!('Notification'in window))return toast('Seu navegador não suporta notificações');const p=await Notification.requestPermission();toast(p==='granted'?'Notificações ativadas':'Permissão não concedida');notifyBtn.textContent=p==='granted'?'🔔 Notificações ativas':'🔔 Ativar notificações'}
 notifyBtn.addEventListener('click',enableNotifications);
-function checkReminders(){if(!('Notification'in window)||Notification.permission!=='granted')return;const now=Date.now();db.events.forEach(e=>{if(!e.date||!e.time)return;const when=new Date(`${e.date}T${e.time}:00`).getTime();const remind=when-(e.reminder||0)*60000;const k=e.id+'-'+e.date+'-'+e.time;if(now>=remind&&now<remind+120000&&!db.notified[k]){new Notification('AUREON TASK',{body:`${e.title}${e.location?' • '+e.location:''}`,icon:'icon.svg'});db.notified[k]=Date.now();localStorage.setItem(KEY,JSON.stringify(db))}})}
+function checkReminders(){if(!('Notification'in window)||Notification.permission!=='granted')return;const now=Date.now();db.events.forEach(e=>{if(!e.date||!e.time)return;const when=new Date(`${e.date}T${e.time}:00`).getTime();const remind=when-(e.reminder||0)*60000;const k=e.id+'-'+e.date+'-'+e.time;if(now>=remind&&now<remind+120000&&!db.notified[k]){new Notification('AUREON TASK',{body:`${e.title}${e.location?' • '+e.location:''}`,icon:'icon-192.png'});db.notified[k]=Date.now();localStorage.setItem(KEY,JSON.stringify(db))}})}
 setInterval(checkReminders,60000);checkReminders();
-if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+let deferredInstallPrompt=null;
+window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event;installBtn.hidden=false});
+installBtn.addEventListener('click',async()=>{if(!deferredInstallPrompt)return;deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;installBtn.hidden=true});
+window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;installBtn.hidden=true});
+if('serviceWorker'in navigator)window.addEventListener('load',async()=>{try{const reg=await navigator.serviceWorker.register('./sw.js?v=7-private-vary-safe',{scope:'./',updateViaCache:'none'});await reg.update()}catch(e){console.warn('PWA service worker registration failed',e)}});
 if('Notification'in window&&Notification.permission==='granted')notifyBtn.textContent='🔔 Notificações ativas';
 renderAll();
 </script>
