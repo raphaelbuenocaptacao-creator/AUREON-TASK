@@ -1,5 +1,5 @@
 const CACHE_PREFIX='aureon-task-shell-';
-const CACHE=CACHE_PREFIX+'v8-query-safe-private-vary';
+const CACHE=CACHE_PREFIX+'v9-query-safe-private-vary-range';
 const ASSETS=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png'];
 const SENSITIVE=/\b(api|auth|login|logout|session|token|password|senha|secret|private|account|conta)\b/i;
 const SHELL_URLS=new Set(ASSETS.map(asset=>new URL(asset,self.registration.scope).href));
@@ -41,7 +41,7 @@ function cacheableResponse(response){
   if(!response||!response.ok||response.redirected||response.type==='opaque'||response.status===206) return false;
   if(response.headers.has('content-range')||response.headers.has('set-cookie')) return false;
   const vary=(response.headers.get('vary')||'').toLowerCase().split(',').map(v=>v.trim()).filter(Boolean);
-  if(vary.some(v=>v==='*'||v==='cookie'||v==='authorization'||v==='range')) return false;
+  if(vary.some(v=>v==='*'||v==='cookie'||v==='authorization'||v==='range'||v==='if-range')) return false;
   const cc=(response.headers.get('cache-control')||'').toLowerCase();
   if(cc.includes('no-store')||cc.includes('private')) return false;
   return true;
