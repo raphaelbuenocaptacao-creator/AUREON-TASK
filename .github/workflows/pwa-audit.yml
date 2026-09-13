@@ -36,12 +36,14 @@ jobs:
         run: |
           grep -q "updateViaCache:'none'" index.html
           grep -q "CACHE=CACHE_PREFIX+'v9-query-safe-private-vary-range'" sw.js
-          grep -q "sw.js?v=9-query-safe-private-vary-range" index.html
+          grep -q "sw.js?v=aureon-task-shell-v9-query-safe-private-vary-range" index.html
           grep -q "authorization" sw.js
           grep -q "cookie" sw.js
           grep -q "if-range" sw.js
           grep -q "no-store" sw.js
           grep -q "set-cookie" sw.js
           grep -q "content-range" sw.js
+          grep -q "v==='range'" sw.js
+          grep -q "v==='if-range'" sw.js
           grep -q "request.mode==='navigate'" sw.js
           grep -q "isShellAsset" sw.js
