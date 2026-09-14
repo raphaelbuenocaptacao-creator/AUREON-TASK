@@ -10,7 +10,13 @@ const required = [
   '@supabase/supabase-js',
   "from('task_user_data')",
   'async function syncSummaryFromCloud',
-  'id="cloudState"'
+  'id="cloudState"',
+  'id="mNQ"',
+  'id="mConvQ"',
+  'CONVERSÃO / Q',
+  'id="equipeObs"',
+  'id="responsaveis"',
+  'Responsáveis gerais / observações finais'
 ];
 
 const missing = required.filter(token => !html.includes(token));
