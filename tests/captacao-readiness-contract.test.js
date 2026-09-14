@@ -10,6 +10,9 @@ const required=[
   'Plano de ação',
   'Sem responsável',
   'Sem prazo',
+  'Ações vencidas',
+  'VGV sem vendas',
+  'Qualificação inválida',
   "CAP_ID='captacao-reuniao-v1'"
 ];
 for(const token of required){
