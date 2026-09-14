@@ -34,7 +34,8 @@ const liveRequired=[
   'Ações sem responsável',
   'Ações vencidas',
   'sem classificação',
-  'classificações acima do total'
+  "'classificações'",
+  'acima do total de casais.'
 ];
 for(const token of liveRequired){
   if(!live.includes(token)) throw new Error(`Leitura gerencial ao vivo ausente: ${token}`);
