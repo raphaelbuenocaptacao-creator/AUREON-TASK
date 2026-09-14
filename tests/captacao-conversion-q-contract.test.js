@@ -4,7 +4,7 @@ const html = fs.readFileSync('captacao.html', 'utf8');
 const required = [
   'id="kConvQ"',
   'CONVERSÃO / Q',
-  'const convQ=capture.q?capture.vendas/capture.q*100:0',
+  'convQ=capture.q?capture.vendas/capture.q*100:0',
   "kConvQ.textContent=convQ.toFixed(1)+'%'"
 ];
 
