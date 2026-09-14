@@ -33,6 +33,8 @@ jobs:
           assert any(i.get('sizes')=='512x512' for i in icons)
           assert any('maskable' in i.get('purpose','') for i in icons)
           PY
+      - name: Validate PWA install experience
+        run: node tests/pwa-install-contract.test.js
       - name: Validate Captação meeting summary contract
         run: node tests/captacao-summary-contract.test.js
       - name: Validate Setembro X paste import contract
