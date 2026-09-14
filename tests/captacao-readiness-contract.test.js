@@ -25,7 +25,7 @@ const liveRequired=[
   'kNQ.textContent=capture.nq||0',
   'id="kConvQ"',
   'CONVERSÃO / Q',
-  'const convQ=capture.q?capture.vendas/capture.q*100:0',
+  'convQ=capture.q?capture.vendas/capture.q*100:0',
   "kConvQ.textContent=convQ.toFixed(1)+'%'",
   'function captureTeamTotals()',
   'function actionHealth()',
