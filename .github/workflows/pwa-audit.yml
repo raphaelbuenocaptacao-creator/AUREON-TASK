@@ -45,9 +45,7 @@ jobs:
           assert cache, 'service worker cache version missing'
           assert "serviceWorker.register('./sw.js')" in app, 'Task app must register service worker'
           assert './captacao.html' in sw and './captacao-resumo.html' in sw, 'meeting pages must be cached'
+          assert "req.mode==='navigate'" in sw, 'navigation fallback missing'
+          assert 'SHELL_URLS' in sw, 'shell allowlist missing'
           PY
-          grep -q "authorization" sw.js || true
-          grep -q "cookie" sw.js || true
-          grep -q "request.mode==='navigate'" sw.js
-          grep -q "SHELL_URLS" sw.js
           grep -q "captacao-resumo.html" sw.js
