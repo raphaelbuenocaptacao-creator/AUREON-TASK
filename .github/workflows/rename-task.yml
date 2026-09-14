@@ -1,0 +1,47 @@
+name: Rename app to Task
+
+on:
+  push:
+    paths:
+      - '.github/workflows/rename-task.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rename:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Rename visible branding
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              'AUREON TASK': 'TASK',
+              'Aureon Task': 'Task',
+          }
+
+          for filename in ['index.html', 'manifest.webmanifest']:
+              path = Path(filename)
+              text = path.read_text(encoding='utf-8')
+              for old, new in replacements.items():
+                  text = text.replace(old, new)
+              path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Commit changes
+        run: |
+          git config user.name "AUREON Automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html manifest.webmanifest
+          if git diff --cached --quiet; then
+            echo "No changes needed"
+          else
+            git commit -m "Rename app branding to Task"
+            git push
+          fi
