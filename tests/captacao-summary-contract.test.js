@@ -16,6 +16,10 @@ const required = [
   'CONVERSÃO / Q',
   'id="mSemClass"',
   'SEM CLASSIFICAÇÃO',
+  'id="mBrindeQtd"',
+  'TOTAL DE BRINDES',
+  'id="mBrindesCasal"',
+  'BRINDES / CASAL',
   'id="equipeObs"',
   'id="responsaveis"',
   'Responsáveis gerais / observações finais'
