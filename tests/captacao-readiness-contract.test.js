@@ -1,5 +1,6 @@
 const fs=require('fs');
 const src=fs.readFileSync('captacao-validacao.html','utf8');
+const live=fs.readFileSync('captacao.html','utf8');
 const required=[
   'PRONTIDÃO DA REUNIÃO',
   'id="readinessScore"',
@@ -17,5 +18,15 @@ const required=[
 ];
 for(const token of required){
   if(!src.includes(token)) throw new Error(`Contrato de prontidão ausente: ${token}`);
+}
+const liveRequired=[
+  'function captureTeamTotals()',
+  'function actionHealth()',
+  'Equipe reconciliada',
+  'Ações sem responsável',
+  'Ações vencidas'
+];
+for(const token of liveRequired){
+  if(!live.includes(token)) throw new Error(`Leitura gerencial ao vivo ausente: ${token}`);
 }
 console.log('Captação meeting readiness contract OK');
