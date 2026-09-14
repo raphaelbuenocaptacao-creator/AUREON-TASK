@@ -37,6 +37,8 @@ jobs:
         run: node tests/captacao-summary-contract.test.js
       - name: Validate Setembro X paste import contract
         run: node tests/captacao-import-contract.test.js
+      - name: Validate Setembro X snapshot contract
+        run: node tests/captacao-september-snapshot-contract.test.js
       - name: Validate meeting readiness contract
         run: node tests/captacao-readiness-contract.test.js
       - name: Validate service worker safety
