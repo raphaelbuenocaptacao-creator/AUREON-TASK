@@ -1,5 +1,6 @@
 const fs = require('fs');
 const html = fs.readFileSync('captacao-resumo.html', 'utf8');
+const editor = fs.readFileSync('captacao.html', 'utf8');
 
 const required = [
   'id="reconciliation"',
@@ -14,6 +15,8 @@ const required = [
   'id="mNQ"',
   'id="mConvQ"',
   'CONVERSÃO / Q',
+  'id="mSemClass"',
+  'SEM CLASSIFICAÇÃO',
   'id="equipeObs"',
   'id="responsaveis"',
   'Responsáveis gerais / observações finais'
@@ -22,6 +25,17 @@ const required = [
 const missing = required.filter(token => !html.includes(token));
 if (missing.length) {
   console.error('Captação summary contract missing:', missing.join(', '));
+  process.exit(1);
+}
+
+const editorRequired = [
+  'id="kSemClass"',
+  'function unclassifiedCount',
+  'SEM CLASSIFICAÇÃO'
+];
+const editorMissing = editorRequired.filter(token => !editor.includes(token));
+if (editorMissing.length) {
+  console.error('Captação editor contract missing:', editorMissing.join(', '));
   process.exit(1);
 }
 
