@@ -1,6 +1,6 @@
 const CACHE_PREFIX='task-shell-';
 const LEGACY_PREFIX='aureon-task-shell-';
-const CACHE=CACHE_PREFIX+'v11-captacao';
+const CACHE=CACHE_PREFIX+'v12-captacao-action-plan';
 const ASSETS=['./','./index.html','./app.html','./captacao.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png'];
 const SHELL_URLS=new Set(ASSETS.map(a=>new URL(a,self.registration.scope).href));
 self.addEventListener('install',event=>event.waitUntil((async()=>{const c=await caches.open(CACHE);await Promise.all(ASSETS.map(async a=>{try{const u=new URL(a,self.registration.scope);const r=await fetch(u,{cache:'reload',credentials:'omit'});if(r.ok&&!r.redirected)await c.put(u,r.clone())}catch{}}));await self.skipWaiting()})()));
