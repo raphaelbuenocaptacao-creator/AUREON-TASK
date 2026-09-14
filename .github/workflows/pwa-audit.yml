@@ -37,6 +37,8 @@ jobs:
         run: node tests/pwa-install-contract.test.js
       - name: Validate Captação meeting summary contract
         run: node tests/captacao-summary-contract.test.js
+      - name: Validate structured couple profiles
+        run: node tests/captacao-profile-rows-contract.test.js
       - name: Validate Setembro X paste import contract
         run: node tests/captacao-import-contract.test.js
       - name: Validate Setembro X snapshot contract
