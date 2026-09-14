@@ -1,7 +1,8 @@
 const CACHE_PREFIX='task-shell-';
-const CACHE=CACHE_PREFIX+'v10-cloud';
-const ASSETS=['./','./index.html','./app.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png'];
+const LEGACY_PREFIX='aureon-task-shell-';
+const CACHE=CACHE_PREFIX+'v11-captacao';
+const ASSETS=['./','./index.html','./app.html','./captacao.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png'];
 const SHELL_URLS=new Set(ASSETS.map(a=>new URL(a,self.registration.scope).href));
 self.addEventListener('install',event=>event.waitUntil((async()=>{const c=await caches.open(CACHE);await Promise.all(ASSETS.map(async a=>{try{const u=new URL(a,self.registration.scope);const r=await fetch(u,{cache:'reload',credentials:'omit'});if(r.ok&&!r.redirected)await c.put(u,r.clone())}catch{}}));await self.skipWaiting()})()));
-self.addEventListener('activate',event=>event.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(k=>k.startsWith(CACHE_PREFIX)&&k!==CACHE).map(k=>caches.delete(k)));await self.clients.claim()})()));
+self.addEventListener('activate',event=>event.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(k=>((k.startsWith(CACHE_PREFIX)||k.startsWith(LEGACY_PREFIX))&&k!==CACHE)).map(k=>caches.delete(k)));await self.clients.claim()})()));
 self.addEventListener('fetch',event=>{const req=event.request;if(req.method!=='GET')return;const url=new URL(req.url);if(url.origin!==self.location.origin)return;const nav=req.mode==='navigate';const shell=url.search===''&&SHELL_URLS.has(url.href);if(!nav&&!shell)return;event.respondWith((async()=>{try{const r=await fetch(req);if(shell&&r.ok&&!r.redirected){const c=await caches.open(CACHE);await c.put(req,r.clone())}return r}catch{const c=await caches.open(CACHE);const cached=await c.match(req);if(cached)return cached;if(nav)return (await c.match(new URL('./app.html',self.registration.scope)))||(await c.match(new URL('./index.html',self.registration.scope)));throw new Error('offline')}})())});
