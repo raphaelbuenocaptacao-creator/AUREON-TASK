@@ -1,0 +1,40 @@
+name: Task maintenance NQ
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add NQ count to executive summary
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('captacao.html')
+          s=p.read_text(encoding='utf-8')
+          old='<div class="card metric"><b id="kCasais">0</b><span>CASAIS</span></div><div class="card metric"><b id="kQ">0</b><span>QUALIFICADOS (Q)</span></div><div class="card metric"><b id="kVendas">0</b><span>VENDAS</span></div><div class="card metric"><b id="kConv">0%</b><span>CONVERSÃO</span></div>'
+          new='<div class="card metric"><b id="kCasais">0</b><span>CASAIS</span></div><div class="card metric"><b id="kQ">0</b><span>QUALIFICADOS (Q)</span></div><div class="card metric"><b id="kNQ">0</b><span>NÃO QUALIFICADOS (NQ)</span></div><div class="card metric"><b id="kVendas">0</b><span>VENDAS</span></div><div class="card metric"><b id="kConv">0%</b><span>CONVERSÃO</span></div>'
+          if 'id="kNQ"' not in s:
+              if old not in s: raise SystemExit('Resumo executivo esperado não encontrado')
+              s=s.replace(old,new,1)
+          old_js='kCasais.textContent=capture.casais||0;kQ.textContent=capture.q||0;kVendas.textContent=capture.vendas||0;'
+          new_js='kCasais.textContent=capture.casais||0;kQ.textContent=capture.q||0;kNQ.textContent=capture.nq||0;kVendas.textContent=capture.vendas||0;'
+          if 'kNQ.textContent=capture.nq||0' not in s:
+              if old_js not in s: raise SystemExit('Renderização esperada não encontrada')
+              s=s.replace(old_js,new_js,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit patch when needed
+        run: |
+          if git diff --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add captacao.html
+          git commit -m "feat: show NQ count in executive summary"
+          git push
