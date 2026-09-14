@@ -40,7 +40,7 @@ function buildReadiness(){
   checks.push(makeCheck('Captadores',capsOk?`Equipe fecha: ${capCasais} casais, ${capVendas} vendas e ${money(capVgv)} de VGV.`:caps.length?`Soma da equipe: ${capCasais} casais, ${capVendas} vendas e ${money(capVgv)}. Compare com o resumo.`:'Adicione os captadores para conferir se a equipe fecha com o resumo.',capsOk?'ok':caps.length?'warn':'bad'));
   const perfil=[capture.profissoes,capture.renda,capture.cidades,capture.carros,capture.motivosNq].filter(hasText).length;
   checks.push(makeCheck('Perfil dos casais',perfil>=4?`${perfil}/5 sinais principais do perfil estão registrados.`:`Só ${perfil}/5 sinais do perfil estão preenchidos. Complete profissão, renda, cidades, carros e motivos de NQ.`,perfil>=4?'ok':'warn'));
-  const brindes=capture.brindes||[], brindeTotal=brindes.reduce((a,b)=>a+Number(b?.quantidade||0)*Number(b?.custo||b?.custoUnit||0),0);
+  const brindes=capture.brindes||[], brindeTotal=brindes.reduce((a,b)=>a+Number(b?.qtd||0)*Number(b?.custo||0),0);
   checks.push(makeCheck('Brindes',brindes.length?`${brindes.length} tipo(s) registrado(s); custo calculável de ${money(brindeTotal)}.`:'Nenhum brinde lançado. Confirme se realmente não houve custo de brindes.',brindes.length?'ok':'warn'));
   const acoes=capture.acoes||[], semResponsavel=acoes.filter(a=>!hasText(a.responsavel)).length, semPrazo=acoes.filter(a=>!hasText(a.prazo)).length;
   const acoesOk=acoes.length>0&&!semResponsavel&&!semPrazo;
