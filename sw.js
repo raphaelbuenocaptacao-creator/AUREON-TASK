@@ -1,8 +1,8 @@
 const CACHE_PREFIX='task-shell-';
 const LEGACY_PREFIX='aureon-task-shell-';
-const CACHE=CACHE_PREFIX+'v18-setembro-import';
+const CACHE=CACHE_PREFIX+'v19-meeting-readiness';
 const SUPABASE_JS='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js';
-const LOCAL_ASSETS=['./','./index.html','./app.html','./captacao.html','./captacao-resumo.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png'];
+const LOCAL_ASSETS=['./','./index.html','./app.html','./captacao.html','./captacao-resumo.html','./captacao-validacao.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png'];
 const ASSETS=[...LOCAL_ASSETS,SUPABASE_JS];
 const SHELL_URLS=new Set(LOCAL_ASSETS.map(a=>new URL(a,self.registration.scope).href));
 const canonical=url=>{const u=new URL(url);u.search='';u.hash='';return u.href};
@@ -11,4 +11,4 @@ self.addEventListener('install',event=>event.waitUntil((async()=>{const c=await 
 self.addEventListener('activate',event=>event.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(k=>((k.startsWith(CACHE_PREFIX)||k.startsWith(LEGACY_PREFIX))&&k!==CACHE)).map(k=>caches.delete(k)));await self.clients.claim()})()));
 self.addEventListener('fetch',event=>{const req=event.request;if(req.method!=='GET')return;const url=new URL(req.url);const isSupabaseJs=url.href===SUPABASE_JS;const nav=req.mode==='navigate'&&url.origin===self.location.origin;const shell=url.origin===self.location.origin&&SHELL_URLS.has(canonical(url.href));if(!isSupabaseJs&&!nav&&!shell)return;
 if(isSupabaseJs){event.respondWith((async()=>{const c=await caches.open(CACHE);const cached=await c.match(SUPABASE_JS);const refresh=(async()=>{try{const r=await fetch(req,{cache:'no-cache'});if(r.ok&&!r.redirected)await c.put(SUPABASE_JS,r.clone())}catch{}})();event.waitUntil(refresh);return cached||(await fetch(req))})());return}
-event.respondWith((async()=>{const c=await caches.open(CACHE);try{const r=nav?await fetchWithTimeout(req):await fetch(req);if(r.ok&&!r.redirected&&shell)await c.put(canonical(url.href),r.clone());return r}catch{const cached=await c.match(canonical(url.href));if(cached)return cached;if(nav){let fallback='./app.html';if(url.pathname.endsWith('/captacao-resumo.html'))fallback='./captacao-resumo.html';else if(url.pathname.endsWith('/captacao.html'))fallback='./captacao.html';return (await c.match(new URL(fallback,self.registration.scope)))||(await c.match(new URL('./index.html',self.registration.scope)))}throw new Error('offline')}})())});
+event.respondWith((async()=>{const c=await caches.open(CACHE);try{const r=nav?await fetchWithTimeout(req):await fetch(req);if(r.ok&&!r.redirected&&shell)await c.put(canonical(url.href),r.clone());return r}catch{const cached=await c.match(canonical(url.href));if(cached)return cached;if(nav){let fallback='./app.html';if(url.pathname.endsWith('/captacao-resumo.html'))fallback='./captacao-resumo.html';else if(url.pathname.endsWith('/captacao-validacao.html'))fallback='./captacao-validacao.html';else if(url.pathname.endsWith('/captacao.html'))fallback='./captacao.html';return (await c.match(new URL(fallback,self.registration.scope)))||(await c.match(new URL('./index.html',self.registration.scope)))}throw new Error('offline')}})())});
