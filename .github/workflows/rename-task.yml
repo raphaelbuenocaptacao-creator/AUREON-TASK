@@ -15,6 +15,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync latest main
+        run: git pull --rebase origin main
 
       - name: Rename visible branding
         run: |
@@ -36,12 +41,13 @@ jobs:
 
       - name: Commit changes
         run: |
-          git config user.name "AUREON Automation"
+          git config user.name "Task Automation"
           git config user.email "actions@users.noreply.github.com"
           git add index.html manifest.webmanifest
           if git diff --cached --quiet; then
             echo "No changes needed"
           else
             git commit -m "Rename app branding to Task"
-            git push
+            git pull --rebase origin main
+            git push origin main
           fi
