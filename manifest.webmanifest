@@ -11,13 +11,14 @@
   "theme_color": "#7C3AED",
   "lang": "pt-BR",
   "icons": [
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"},
     {"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},
     {"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},
     {"src":"icon-maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}
   ],
   "shortcuts": [
-    {"name":"Captação / Reunião","short_name":"Captação","description":"Abrir painel de captação e reunião","url":"./captacao.html","icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png"}]},
-    {"name":"Resumo da Reunião","short_name":"Resumo","description":"Abrir resumo executivo da captação","url":"./captacao-resumo.html","icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png"}]},
-    {"name":"Validar Reunião","short_name":"Validar","description":"Conferir prontidão, números, responsáveis e prazos","url":"./captacao-validacao.html","icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png"}]}
+    {"name":"Captação / Reunião","short_name":"Captação","description":"Abrir painel de captação e reunião","url":"./captacao.html","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml"}]},
+    {"name":"Resumo da Reunião","short_name":"Resumo","description":"Abrir resumo executivo da captação","url":"./captacao-resumo.html","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml"}]},
+    {"name":"Validar Reunião","short_name":"Validar","description":"Conferir prontidão, números, responsáveis e prazos","url":"./captacao-validacao.html","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml"}]}
   ]
 }
