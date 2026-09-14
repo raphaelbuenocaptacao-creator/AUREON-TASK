@@ -1,0 +1,18 @@
+const fs=require('fs');
+const src=fs.readFileSync('captacao-validacao.html','utf8');
+const required=[
+  'PRONTIDÃO DA REUNIÃO',
+  'id="readinessScore"',
+  'id="readinessList"',
+  'function buildReadiness()',
+  'Q + NQ',
+  'Captadores',
+  'Plano de ação',
+  'Sem responsável',
+  'Sem prazo',
+  "CAP_ID='captacao-reuniao-v1'"
+];
+for(const token of required){
+  if(!src.includes(token)) throw new Error(`Contrato de prontidão ausente: ${token}`);
+}
+console.log('Captação meeting readiness contract OK');
