@@ -1,6 +1,6 @@
 const CACHE_PREFIX='task-shell-';
 const LEGACY_PREFIX='aureon-task-shell-';
-const CACHE=CACHE_PREFIX+'v19-meeting-readiness';
+const CACHE=CACHE_PREFIX+'v20-validation-integrity';
 const SUPABASE_JS='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js';
 const LOCAL_ASSETS=['./','./index.html','./app.html','./captacao.html','./captacao-resumo.html','./captacao-validacao.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-maskable-512.png'];
 const ASSETS=[...LOCAL_ASSETS,SUPABASE_JS];
