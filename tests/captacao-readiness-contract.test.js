@@ -20,6 +20,9 @@ for(const token of required){
   if(!src.includes(token)) throw new Error(`Contrato de prontidão ausente: ${token}`);
 }
 const liveRequired=[
+  'id="kNQ"',
+  'NÃO QUALIFICADOS (NQ)',
+  'kNQ.textContent=capture.nq||0',
   'function captureTeamTotals()',
   'function actionHealth()',
   'Equipe reconciliada',
