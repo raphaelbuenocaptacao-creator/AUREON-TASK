@@ -29,11 +29,15 @@ const liveRequired=[
   "kConvQ.textContent=convQ.toFixed(1)+'%'",
   'function captureTeamTotals()',
   'function actionHealth()',
+  'function qualificationHealth()',
   'Equipe reconciliada',
   'Ações sem responsável',
-  'Ações vencidas'
+  'Ações vencidas',
+  'sem classificação',
+  'classificações acima do total'
 ];
 for(const token of liveRequired){
   if(!live.includes(token)) throw new Error(`Leitura gerencial ao vivo ausente: ${token}`);
 }
+if(live.includes('O CSV possui 1 atendimento sem classificação.')) throw new Error('Leitura de qualificação não pode assumir CSV nem divergência fixa de 1 atendimento');
 console.log('Captação meeting readiness contract OK');
