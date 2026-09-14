@@ -7,10 +7,10 @@
 :root{--bg:#090b14;--card:#111629;--text:#f8fafc;--muted:#94a3b8;--line:#26304b;--violet:#7c3aed;--green:#34d399;--amber:#fbbf24;--red:#fb7185}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 15% 0%,#23154b 0,transparent 34%),var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}.app{max-width:1120px;margin:auto;padding:16px 14px 60px}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:14px}.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid var(--line);background:#111629;color:var(--text);border-radius:12px;padding:10px 12px;text-decoration:none;cursor:pointer}.btn.primary{border:0;background:linear-gradient(135deg,var(--violet),#5b21b6)}.hero,.card{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));border-radius:20px}.hero{padding:22px;margin-bottom:12px}.hero h1{margin:4px 0 6px;font-size:28px}.muted{color:var(--muted)}.chip{display:inline-block;padding:4px 8px;border-radius:99px;background:#25184a;color:#c4b5fd;font-size:10px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}.metric{padding:15px}.metric b{display:block;font-size:24px}.metric span{font-size:10px;color:var(--muted)}.card{padding:16px;margin-bottom:12px}.card h2{font-size:16px;margin:0 0 12px}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.item{padding:10px 0;border-bottom:1px solid var(--line)}.item:last-child{border:0}.item b{display:block;margin-bottom:3px}.tableWrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:650px}.table th,.table td{padding:9px 7px;border-bottom:1px solid var(--line);text-align:left;font-size:12px}.table th{color:var(--muted);font-size:10px}.status{padding:4px 8px;border-radius:99px;background:#25184a;font-size:10px;display:inline-block}.empty{color:var(--muted);padding:16px;border:1px dashed var(--line);border-radius:12px}.pre{white-space:pre-wrap}.good{color:var(--green)}.warn{color:var(--amber)}.bad{color:var(--red)}.healthGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.health{padding:12px;border:1px solid var(--line);border-radius:14px;background:#0b1020}.health b{font-size:18px;display:block}.health span{font-size:10px;color:var(--muted)}.notice{margin-top:10px;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#0b1020}.notice.warn{border-color:#6b4f1d}.notice.bad{border-color:#6e2938}
 @media(max-width:760px){.grid,.healthGrid{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}.hero h1{font-size:24px}.top{align-items:flex-start;flex-direction:column}.actions{width:100%}.btn{flex:1;text-align:center}}
-@media print{body{background:#fff;color:#111}.app{max-width:none;padding:0}.top .actions{display:none}.hero,.card,.health,.notice{background:#fff;border:1px solid #ddd;box-shadow:none}.muted,.metric span,.table th,.health span{color:#666}.chip,.status{background:#eee;color:#222}.grid{grid-template-columns:repeat(4,1fr)}}
+@media print{body{background:#fff;color:#111}.app{max-width:none;padding:0}.top .actions,#cloudState{display:none}.hero,.card,.health,.notice{background:#fff;border:1px solid #ddd;box-shadow:none}.muted,.metric span,.table th,.health span{color:#666}.chip,.status{background:#eee;color:#222}.grid{grid-template-columns:repeat(4,1fr)}}
 </style></head>
 <body><div class="app">
-<header class="top"><div><b>Task</b><div class="muted">CAPTAÇÃO • RESUMO DA REUNIÃO</div></div><div class="actions"><a class="btn" href="captacao.html">← Editar dados</a><button class="btn" onclick="copySummary()">📋 Copiar resumo</button><button class="btn primary" onclick="window.print()">🖨️ Imprimir / PDF</button></div></header>
+<header class="top"><div><b>Task</b><div class="muted">CAPTAÇÃO • RESUMO DA REUNIÃO</div><div id="cloudState" class="muted">dados do aparelho • verificando nuvem...</div></div><div class="actions"><a class="btn" href="captacao.html">← Editar dados</a><button class="btn" onclick="copySummary()">📋 Copiar resumo</button><button class="btn primary" onclick="window.print()">🖨️ Imprimir / PDF</button></div></header>
 <section class="hero"><span class="chip">Fonte: Setembro X</span><h1>Resumo Executivo da Captação</h1><div id="periodo" class="muted">Período não informado</div></section>
 <section class="grid"><div class="card metric"><b id="mCasais">0</b><span>CASAIS</span></div><div class="card metric"><b id="mQ">0</b><span>Q</span></div><div class="card metric"><b id="mVendas">0</b><span>VENDAS</span></div><div class="card metric"><b id="mConv">0%</b><span>CONVERSÃO</span></div><div class="card metric"><b id="mVgv">R$ 0</b><span>VGV</span></div><div class="card metric"><b id="mTicket">R$ 0</b><span>TICKET MÉDIO</span></div><div class="card metric"><b id="mBrindes">R$ 0</b><span>CUSTO BRINDES</span></div><div class="card metric"><b id="mCpc">R$ 0</b><span>CUSTO / CASAL</span></div></section>
 <section class="two"><div class="card"><h2>Resumo Executivo</h2><div id="resumo" class="pre muted">Sem leitura executiva registrada.</div></div><div class="card"><h2>Leitura de Qualificação</h2><div id="qualificacao"></div></div></section>
@@ -22,12 +22,33 @@
 <section class="card"><h2>Plano de Ação</h2><div class="tableWrap"><table class="table"><thead><tr><th>Ação</th><th>Responsável</th><th>Prazo</th><th>Status</th><th>Observação</th></tr></thead><tbody id="acoes"></tbody></table></div></section>
 <section class="two"><div class="card"><h2>Pontos discutidos</h2><div id="reuniaoNotas" class="pre muted"></div></div><div class="card"><h2>Problemas / riscos</h2><div id="riscos" class="pre muted"></div></div></section>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js"></script>
 <script>
 const KEY='task-v2', CAP_ID='captacao-reuniao-v1';
+const sb=window.supabase?.createClient('https://veznreiamwstlulkpocz.supabase.co','sb_publishable_7ukoyUiZh73XRZxzBDhqjw_OsvJ8_JB');
 function money(v){return Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:2})}
-function esc(v=''){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function loadCapture(){try{const db=JSON.parse(localStorage.getItem(KEY)||'{}');return (db.reports||[]).find(x=>x.id===CAP_ID)?.captacaoData||{}}catch{return {}}}
+function esc(v=''){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]))}
+function loadDb(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch{return {}}}
+function loadCapture(){const db=loadDb();return (db.reports||[]).find(x=>x.id===CAP_ID)?.captacaoData||{}}
+function stamp(v){const n=Date.parse(v||'');return Number.isFinite(n)?n:0}
 function todayYmd(){const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)}
+async function syncSummaryFromCloud(){
+  if(!sb||!navigator.onLine){cloudState.textContent='offline • usando dados salvos no aparelho';return}
+  const {data:sess}=await sb.auth.getSession();const user=sess.session?.user||null;
+  if(!user){cloudState.textContent='dados do aparelho • entre no Task para sincronizar';return}
+  cloudState.textContent='conta conectada • conferindo versão da nuvem...';
+  const {data,error}=await sb.from('task_user_data').select('payload').eq('user_id',user.id).maybeSingle();
+  if(error){cloudState.textContent='nuvem indisponível • usando dados salvos no aparelho';return}
+  const remoteDb=data?.payload||{}, remoteReport=(remoteDb.reports||[]).find(x=>x.id===CAP_ID), remoteCap=remoteReport?.captacaoData;
+  const localDb=loadDb(), localReport=(localDb.reports||[]).find(x=>x.id===CAP_ID), localCap=localReport?.captacaoData;
+  if(remoteCap&&(!localCap||stamp(remoteCap.updatedAt)>stamp(localCap.updatedAt))){
+    const reports=[...(localDb.reports||[])], idx=reports.findIndex(x=>x.id===CAP_ID);
+    if(idx>=0)reports[idx]=remoteReport;else reports.unshift(remoteReport);
+    localDb.reports=reports;localStorage.setItem(KEY,JSON.stringify(localDb));
+    sessionStorage.setItem('task-summary-cloud-refresh','1');location.reload();return;
+  }
+  cloudState.textContent='nuvem conferida • resumo atualizado';
+}
 function calcMeetingHealth(capture){
   const caps=capture.captadores||[];
   const team=caps.reduce((a,x)=>({casais:a.casais+Number(x.casais||0),vendas:a.vendas+Number(x.vendas||0),vgv:a.vgv+Number(x.vgv||0)}),{casais:0,vendas:0,vgv:0});
@@ -54,4 +75,6 @@ brindes.innerHTML=(c.brindes||[]).length?(c.brindes||[]).map(b=>`<tr><td>${esc(b
 acoes.innerHTML=(c.acoes||[]).length?(c.acoes||[]).map(a=>{const late=a.status!=='Concluída'&&a.prazo&&a.prazo<todayYmd();return `<tr><td>${esc(a.acao||'—')}</td><td>${esc(a.responsavel||'—')}</td><td class="${late?'bad':''}">${esc(a.prazo||'—')}${late?' • vencida':''}</td><td><span class="status">${esc(a.status||'Pendente')}</span></td><td>${esc(a.obs||'—')}</td></tr>`}).join(''):'<tr><td colspan="5" class="muted">Nenhuma ação definida.</td></tr>';
 function buildSummary(){const top=caps.slice(0,3).map((x,i)=>`${i+1}. ${x.nome||'Sem nome'} — ${x.casais||0} casais | ${x.vendas||0} vendas | ${money(x.vgv)}`).join('\n')||'-';const acts=(c.acoes||[]).map(a=>`- ${a.acao||'Ação'} | ${a.responsavel||'Sem responsável'} | ${a.prazo||'Sem prazo'} | ${a.status||'Pendente'}`).join('\n')||'-';const conf=teamOk?'Equipe confere com o geral.':`Conferir equipe: diferença de ${health.diff.casais} casais, ${health.diff.vendas} vendas e ${money(health.diff.vgv)} em VGV.`;const actionLine=`Ações: ${health.actions.pending} pendentes | ${health.actions.inProgress} em andamento | ${health.actions.overdue} vencidas | ${health.actions.done} concluídas.`;return `TASK — CAPTAÇÃO / REUNIÃO\nFonte: Setembro X\nPeríodo: ${c.periodo||'-'}\n\nRESUMO EXECUTIVO\nCasais: ${c.casais||0} | Q: ${c.q||0} | NQ: ${c.nq||0}\nVendas: ${c.vendas||0} | Conversão: ${conv.toFixed(1)}%\nVGV: ${money(c.vgv)} | Ticket: ${money(ticket)}\nBrindes: ${money(totalBrindes)} | Custo/casal: ${money(cpc)}\n\nCONFERÊNCIAS\n${conf}\n${actionLine}\n\nLEITURA\n${c.resumo||'-'}\n\nTOP CAPTADORES POR VGV\n${top}\n\nDECISÕES\n${c.decisoes||'-'}\n\nPLANO DE AÇÃO\n${acts}\n\nPRÓXIMOS PASSOS\n${c.proximos||'-'}`}
 async function copySummary(){const text=buildSummary();try{await navigator.clipboard.writeText(text);alert('Resumo copiado.')}catch{const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();alert('Resumo copiado.')}}
+if(sessionStorage.getItem('task-summary-cloud-refresh')){sessionStorage.removeItem('task-summary-cloud-refresh');cloudState.textContent='nuvem atualizada • exibindo versão mais recente'}
+syncSummaryFromCloud();
 </script></body></html>
