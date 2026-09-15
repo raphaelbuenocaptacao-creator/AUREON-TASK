@@ -27,15 +27,16 @@ const liveRequired=[
   'CONVERSÃO / Q',
   'convQ=capture.q?capture.vendas/capture.q*100:0',
   "kConvQ.textContent=convQ.toFixed(1)+'%'",
-  'function captureTeamTotals()',
   'function actionHealth()',
-  'function qualificationHealth()',
-  'Equipe reconciliada',
-  'Ações sem responsável',
-  'Ações vencidas',
-  'sem classificação',
-  "'classificações'",
-  'acima do total de casais.'
+  'Q + NQ = ${capture.q+capture.nq} de ${capture.casais} casais.',
+  'Execução pós-reunião',
+  'sem responsável',
+  'sem prazo',
+  'vencidas',
+  "CAP_ID='captacao-reuniao-v1'",
+  "localStorage.setItem(KEY,JSON.stringify(db))",
+  ".eq('user_id',user.id)",
+  "offline • salvo no aparelho"
 ];
 for(const token of liveRequired){
   if(!live.includes(token)) throw new Error(`Leitura gerencial ao vivo ausente: ${token}`);
