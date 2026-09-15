@@ -1,19 +1,25 @@
 const fs=require('fs');
 const src=fs.readFileSync('captacao.html','utf8');
+
+// Setembro X is now a manual input source. The contract must validate that
+// imported data can be pasted, parsed, timestamped and persisted without
+// requiring a stale hard-coded September 2026 snapshot inside the app.
 const required=[
-  'const SETEMBRO_2026_SEED=',
-  'casais:224',
-  'q:155',
-  'nq:68',
-  'vendas:32',
-  'vgv:4258700',
-  "periodo:'01 a 13/09/2026'",
-  'function isCaptureBlank(',
-  'SETEMBRO_2026_SEED',
-  'LARISSA RIBEIRO',
-  'MUSEU DE CERA'
+  'id="setembroPaste"',
+  'onclick="importSetembroX()"',
+  'function importSetembroX()',
+  'parseSetembroNumber',
+  'extractMetric',
+  'capture.importedAt',
+  'saveCapture()'
 ];
 for(const token of required){
-  if(!src.includes(token)) throw new Error(`Snapshot Setembro X ausente: ${token}`);
+  if(!src.includes(token)) throw new Error(`Fluxo Setembro X ausente: ${token}`);
 }
-console.log('Captação Setembro X snapshot contract OK');
+
+// Guard against reintroducing the obsolete embedded operational snapshot.
+if(src.includes('const SETEMBRO_2026_SEED=')){
+  throw new Error('Snapshot fixo do Setembro X não deve ser obrigatório no Task; use entrada manual.');
+}
+
+console.log('Captação Setembro X manual snapshot contract OK');
