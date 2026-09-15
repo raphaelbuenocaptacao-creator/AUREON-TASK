@@ -22,7 +22,7 @@ for(const token of required){
 const liveRequired=[
   'id="kNQ"',
   'NÃO QUALIFICADOS (NQ)',
-  'kNQ.textContent=capture.nq||0',
+  'kNQ.textContent=capture.nq',
   'id="kConvQ"',
   'CONVERSÃO / Q',
   'convQ=capture.q?capture.vendas/capture.q*100:0',
