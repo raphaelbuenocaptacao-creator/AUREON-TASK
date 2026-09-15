@@ -5,8 +5,9 @@ const required=[
   'onclick="importSetembroX()"',
   'function importSetembroX()',
   'parseSetembroNumber',
-  'Dados do Setembro X aplicados',
-  "capture.importedAt"
+  'extractMetric',
+  "capture.importedAt",
+  'saveCapture()'
 ];
 for(const token of required){
   if(!src.includes(token)) throw new Error(`Contrato de importação ausente: ${token}`);
